@@ -7,11 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class LoginScreen extends StatelessWidget {
+
+
+class LoginScreen extends StatefulWidget {
   static const String idScreen = "login";
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameTextEditingController = TextEditingController();
+
   TextEditingController emailTextEditingController = TextEditingController();
+
   TextEditingController passwordTextEditingController = TextEditingController();
 
   @override
@@ -107,9 +116,7 @@ class LoginScreen extends StatelessWidget {
                           else {
                             loginAuthenticateUser(context);
                           }
-                        },
-
-                    ),
+                        })
                   ],
                 ),
               ),
@@ -169,5 +176,3 @@ displayToastMessage(String message, BuildContext context)
 {
   Fluttertoast.showToast(msg: message);
 }
-
-

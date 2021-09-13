@@ -4,18 +4,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:driver_app/main.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-class RegistrationScreen extends StatelessWidget {
+class RegistrationScreen extends StatefulWidget {
 
   static const String idScreen = "register";
 
-  TextEditingController nameTextEditingController = TextEditingController();
-  TextEditingController emailTextEditingController = TextEditingController();
-  TextEditingController licenseTextEditingController = TextEditingController();
-  TextEditingController phoneTextEditingController = TextEditingController();
-  TextEditingController passwordTextEditingController = TextEditingController();
+  @override
+  _RegistrationScreenState createState() => _RegistrationScreenState();
+}
 
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  TextEditingController nameTextEditingController = TextEditingController();
+
+  TextEditingController emailTextEditingController = TextEditingController();
+
+  TextEditingController licenseTextEditingController = TextEditingController();
+
+  TextEditingController phoneTextEditingController = TextEditingController();
+
+  TextEditingController passwordTextEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +202,7 @@ class RegistrationScreen extends StatelessWidget {
   }
 
   final FirebaseAuth _firebaseAuth= FirebaseAuth.instance;
+
   void registerNewUser(BuildContext context) async
   {
 final User? firebaseUser = (await _firebaseAuth
@@ -225,6 +233,7 @@ else
 displayToastMessage("New Driver Account Is Created", context);
   }
   }
+
   displayToastMessage(String message, BuildContext context)
   {
     Fluttertoast.showToast(msg: message);

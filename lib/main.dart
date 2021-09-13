@@ -1,3 +1,6 @@
+
+import 'package:driver_app/AllScreens/SplashScreen.dart';
+import 'package:driver_app/AllScreens/availablebookingsScreen.dart';
 import 'package:driver_app/AllScreens/bookingScreen.dart';
 import 'package:driver_app/AllScreens/loginScreen.dart';
 import 'package:driver_app/AllScreens/mainscreen.dart';
@@ -24,12 +27,14 @@ class MyApp extends StatelessWidget {
        fontFamily: "Brand Bold",
         primarySwatch: Colors.blue,
       ),
-      initialRoute: LoginScreen.idScreen,
+      initialRoute: Splash.idScreen,
       routes: {
+        Splash.idScreen: (context)=> Splash(),
         RegistrationScreen.idScreen: (context)=> RegistrationScreen(),
         LoginScreen.idScreen: (context)=> LoginScreen(),
         MainScreen.idScreen: (context)=> MainScreen(),
-      BookingScreen.idScreen: (context)=> BookingScreen(),  
+      BookingScreen.idScreen: (context)=> BookingScreen(),
+      AvailableBookingScreen.idScreen: (context)=> AvailableBookingScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

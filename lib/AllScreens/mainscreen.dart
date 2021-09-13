@@ -1,4 +1,7 @@
+import 'package:driver_app/AllScreens/availablebookingsScreen.dart';
 import 'package:driver_app/AllScreens/bookingScreen.dart';
+import 'package:driver_app/AllScreens/loginScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,10 +19,20 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-       title: Text("Main Screen"),
+        backgroundColor: Colors.black,
+       title: Text("DRIVER APP"),
       ),
       key: scaffoldkey,
+
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context)=>BookingScreen()));
+
+      },
+        backgroundColor: Colors.deepOrange,
+        child: Icon(Icons.add,color: Colors.white,),
+
+      ),
 
       drawer: Container(
         color: Colors.white,
@@ -56,26 +69,32 @@ class _MainScreenState extends State<MainScreen> {
               title: Text("History", style: TextStyle(fontSize: 15.0),),
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text("Visit Profile", style: TextStyle(fontSize: 15.0),),
+              leading: Icon(Icons.departure_board),
+              title: Text("Bookings Added", style: TextStyle(fontSize: 15.0),),
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context)=>AvailableBookingScreen()));
+                },
             ),
             ListTile(
-              leading: Icon(Icons.info),
-              title: Text("Add Bookings", style: TextStyle(fontSize: 15.0),),
-                onTap: (){
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, BookingScreen.idScreen, (route) => false);
-                }
+              leading: Icon(Icons.logout),
+              title: Text("Logout", style: TextStyle(fontSize: 15.0),),
+              onTap: () {
+                signout(context);
+              }
             ),
           ],
         ),
         ),
       ),
-      body: Stack(
-        children: [
 
-        ],
-      ),
     );
   }
+  //logout from page
+  final FirebaseAuth _firebaseAuth= FirebaseAuth.instance;
+ Future<void> signout(BuildContext context) async {
+    await _firebaseAuth.signOut().then((value) =>
+      Navigator.of(
+          context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false));
+ }
 }

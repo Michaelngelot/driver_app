@@ -1,30 +1,52 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:driver_app/AllScreens/loginScreen.dart';
-import 'package:driver_app/AllScreens/mainscreen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
-class BookingScreen extends StatelessWidget {
-  //const BookingScreen({Key? key}) : super(key: key);
+class BookingScreen extends StatefulWidget {
   static const String idScreen = "bookingscreen";
+
+  @override
+  _BookingScreenState createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
 
   String uid = FirebaseAuth.instance.currentUser!.uid;
 
   DatabaseReference DBRef = FirebaseDatabase.instance.reference().child('drivers/Forms');
 
   TextEditingController carTextEditingController = TextEditingController();
+
   TextEditingController storageTextEditingController = TextEditingController();
+
   TextEditingController destinationTextEditingController = TextEditingController();
+
   TextEditingController phoneTextEditingController = TextEditingController();
+
   TextEditingController dateTextEditingController = TextEditingController();
+
+  DateTime _dateTime= DateTime.now();
+  _selectedTodoDate(BuildContext context)async{
+    var _pickedDate = await showDatePicker(context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2021),
+        lastDate: DateTime(2025));
+    if (_pickedDate!=null){
+      setState(() {
+        _dateTime=_pickedDate;
+        dateTextEditingController.text=DateFormat('dd-MM-yyyy').format(_pickedDate);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Add Availability"),
-        backgroundColor: Colors.deepOrange,
+        title: Text(" Edit Bookings Added"),
+        backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -34,14 +56,15 @@ class BookingScreen extends StatelessWidget {
             children: [
               Padding(padding: EdgeInsets.all(20.0),
                 child: Column(
-                  children: [
-
+                  children:<Widget> [
                     SizedBox(height: 1.0,),
+
                     TextField(
                       controller: carTextEditingController,
-                      keyboardType: TextInputType.name,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        labelText: "Cartype",
+                        icon: Icon(Icons.local_shipping_rounded ),
+                        labelText: "Truck type",
                         labelStyle: TextStyle(
                           fontSize: 14.0,
                         ),
@@ -53,12 +76,13 @@ class BookingScreen extends StatelessWidget {
                       ),
                       style: TextStyle(fontSize: 14.0),
                     ),
-
                     SizedBox(height: 1.0),
+
                     TextField(
                       controller: storageTextEditingController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
+                        icon: Icon(Icons.storage),
                         labelText: "Storage Description",
                         labelStyle: TextStyle(
                           fontSize: 14.0,
@@ -76,6 +100,7 @@ class BookingScreen extends StatelessWidget {
                       controller: destinationTextEditingController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
+                        icon: Icon(Icons.location_on_sharp),
                         labelText: "Destination",
                         labelStyle: TextStyle(
                           fontSize: 14.0,
@@ -93,6 +118,7 @@ class BookingScreen extends StatelessWidget {
                       controller: phoneTextEditingController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
+                        icon: Icon(Icons.phone_sharp),
                         labelText: "Telephone",
                         labelStyle: TextStyle(
                           fontSize: 14.0,
@@ -107,11 +133,14 @@ class BookingScreen extends StatelessWidget {
                     ),
 
                     SizedBox(height: 1.0),
-                    TextFormField(
+                    TextField(
                       controller: dateTextEditingController,
-                      keyboardType: TextInputType.datetime,
+                      onTap: (){
+                        _selectedTodoDate(context);
+                      },
                       decoration: InputDecoration(
-                        labelText: "Departure Date",
+                        icon: Icon(Icons.date_range_sharp),
+                        labelText: "Departure Date (dd/MM/yy)",
                         labelStyle: TextStyle(
                           fontSize: 14.0,
                         ),
@@ -126,7 +155,7 @@ class BookingScreen extends StatelessWidget {
 
                     SizedBox(height: 10.0),
                     RaisedButton(
-                        color: Colors.black,
+                        color: Colors.orange,
                         textColor: Colors.white,
                         child: Container(
                           height: 50.0,
@@ -142,13 +171,15 @@ class BookingScreen extends StatelessWidget {
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(24.0),
                         ),
+
                         onPressed: () {
+
                           if (carTextEditingController.text.isEmpty) {
                             displayToastMessage(
-                                "CarName is mandatory", context);
+                                "CarType/Name is mandatory", context);
                           }
                           else if (storageTextEditingController.text.isEmpty) {
-                            displayToastMessage("storage is mandatory",
+                            displayToastMessage("Storage/Space Available is mandatory",
                                 context);
                           }
                           else if (phoneTextEditingController.text.isEmpty) {
@@ -176,19 +207,19 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-
   void registerNewForm(BuildContext context) {
-    //save user info into db
+
    Map<String, String> driver ={
-      "Cartype": carTextEditingController.text.trim(),
+      "car": carTextEditingController.text.trim(),
       "storage": storageTextEditingController.text.trim(),
       "phone": '+233'+ phoneTextEditingController.text.trim(),
-      "destination": destinationTextEditingController.text.trim(),
-      "depatrtureTime": dateTextEditingController.text.trim(),
+      "finalDestination": destinationTextEditingController.text.trim(),
+      "departureTime": dateTextEditingController.text.trim(),
     };
+
    DBRef.child(uid.toString()).push().set(driver);
     displayToastMessage("Congratulations, your details have been submitted successfully", context);
-    Navigator.pushNamedAndRemoveUntil(context, MainScreen.idScreen, (route) => false);
+    Navigator.pop(context);
   }
 
   displayToastMessage(String message, BuildContext context)
