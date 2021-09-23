@@ -2,7 +2,13 @@ import 'package:driver_app/AllScreens/availablebookingsScreen.dart';
 import 'package:driver_app/AllScreens/bookingScreen.dart';
 import 'package:driver_app/AllScreens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class MainScreen extends StatefulWidget {
 const MainScreen({Key? key}) : super(key: key);
@@ -14,6 +20,25 @@ _MainScreenState createState() => _MainScreenState();
 
 class _MainScreenState extends State<MainScreen> {
   GlobalKey<ScaffoldState> scaffoldkey = new GlobalKey<ScaffoldState>();
+  var bPadding=0.0;
+  //late String _resultAddress;
+  Completer<GoogleMapController> _newGooglecontroller = Completer();
+  late GoogleMapController userMap;
+
+  late Position currentPosition;
+  var geoLocator = Geolocator();
+
+  void getCurrentLocation() async{
+    Position position=await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high,);
+    currentPosition = position;
+    LatLng lang = LatLng(position.latitude, position.longitude);
+    CameraPosition cameraPosition= CameraPosition(target: lang, zoom: 14.0);
+  }
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +48,6 @@ class _MainScreenState extends State<MainScreen> {
        title: Text("DRIVER APP"),
       ),
       key: scaffoldkey,
-
       floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.push(
             context, MaterialPageRoute(builder: (context)=>BookingScreen()));
@@ -56,7 +80,6 @@ class _MainScreenState extends State<MainScreen> {
                           Text("Visit Profile"),
                         ],
                       )
-
                     ],
                     ),
                 ),
@@ -87,7 +110,25 @@ class _MainScreenState extends State<MainScreen> {
         ),
         ),
       ),
-
+      body: Stack(
+        children: [
+               GoogleMap(
+                 initialCameraPosition: _kGooglePlex,
+                 mapType: MapType.normal,
+                 myLocationEnabled: true,
+                 tiltGesturesEnabled: true,
+                 zoomGesturesEnabled: true,
+                 zoomControlsEnabled: true,
+                 onMapCreated: (GoogleMapController controller){
+                   _newGooglecontroller.complete(controller);
+                   userMap=controller;
+                   setState(() {
+                     bPadding = 305.0;
+                   });
+                   getCurrentLocation();
+                 },
+             ),
+      ]),
     );
   }
   //logout from page
@@ -97,4 +138,6 @@ class _MainScreenState extends State<MainScreen> {
       Navigator.of(
           context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false));
  }
+
+
 }

@@ -1,4 +1,3 @@
-
 import 'package:driver_app/AllScreens/SplashScreen.dart';
 import 'package:driver_app/AllScreens/availablebookingsScreen.dart';
 import 'package:driver_app/AllScreens/bookingScreen.dart';
@@ -20,23 +19,22 @@ DatabaseReference usersRef = FirebaseDatabase.instance.reference().child("driver
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Freight Driver App',
-      theme: ThemeData(
-       fontFamily: "Brand Bold",
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: Splash.idScreen,
-      routes: {
-        Splash.idScreen: (context)=> Splash(),
-        RegistrationScreen.idScreen: (context)=> RegistrationScreen(),
-        LoginScreen.idScreen: (context)=> LoginScreen(),
-        MainScreen.idScreen: (context)=> MainScreen(),
-      BookingScreen.idScreen: (context)=> BookingScreen(),
-      AvailableBookingScreen.idScreen: (context)=> AvailableBookingScreen(),
-      },
-      debugShowCheckedModeBanner: false,
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Freight Driver App',
+        theme: ThemeData(
+         fontFamily: "Brand Bold",
+
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: Splash.idScreen,
+        routes: {
+          Splash.idScreen: (context)=> Splash(),
+          RegistrationScreen.idScreen: (context)=> RegistrationScreen(),
+          LoginScreen.idScreen: (context)=> LoginScreen(),
+          MainScreen.idScreen: (context)=> MainScreen(),
+        BookingScreen.idScreen: (context)=> BookingScreen(),
+        AvailableBookingScreen.idScreen: (context)=> AvailableBookingScreen(),
+        },
+        debugShowCheckedModeBanner: false,
     );
-  }
 }
